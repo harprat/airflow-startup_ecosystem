@@ -1,0 +1,22 @@
+services:
+  startup-investment-db:
+    image: postgres:latest
+    container_name: startup-investment-db
+    environment:
+      POSTGRES_USER: ${STARTUP_INVESTMENT_DB_USER}
+      POSTGRES_PASSWORD: ${STARTUP_INVESTMENT_DB_PASSWORD}
+      POSTGRES_DB: ${STARTUP_INVESTMENT_DB_NAME}
+    ports:
+      - 5436:5432
+    volumes:
+      - ./startup_investment:/docker-entrypoint-initdb.d
+      - startup_investment:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${STARTUP_INVESTMENT_DB_USER}" ]
+      interval: 5s
+    restart: always
+
+volumes:
+  startup_investment:
+    driver: local
+    name: startup_investment
